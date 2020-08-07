@@ -27,6 +27,15 @@ class SQLither:
         """Обновляем статус подписчика"""
         return self.cursor.execute("UPDATE `subscription` SET `status` = ? WHERE user_id = ?", (status, user_id))
 
+    def all_categories(self, user_id):
+        with self.connection:
+            category = []
+            result = self.cursor.execute("SELECT `category_name` FROM `categories` WHERE `user_id` = ?", (user_id,)).fetchall()
+            for row in result:
+                category.append(row)
+            category.append("Добавить новую категорию")
+            return category
+
     def close(self):
         """Закрываем соединение с базой"""
         self.connection.close()

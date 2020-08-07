@@ -4,9 +4,12 @@ import logging
 
 from aiogram import Bot, Dispatcher, executor, types
 from db import SQLither
+import categories
+import keyboard
+
 # import exceptions
 # import expenses
-import categories
+
 
 # задаем уровень логов
 logging.basicConfig(level=logging.INFO)
@@ -48,6 +51,23 @@ async def send_welcome(message: types.Message):
         "За текущий месяц: /month\n"
         "Последние внесённые расходы: /expenses\n"
         "Категории трат: /categories")
+
+@dp.message_handler(commands=['add_categories'])
+async def add_categories(message: types.Message):
+    await message.answer(db.all_categories(message.from_user.id))
+    buttons = types.InlineKeyboardMarkup()
+    buttons.add(db.all_categories(message.from_user.id))
+    await message.answer('Категории', reply_markup=buttons)
+
+@dp.message_handler()
+async def add_trans(message: types.Message):
+    await message.answer(text=message.text, reply_markup=keyboard.buttons)
+    await message.delete()
+
+@dp.callback_query_handler()
+async def process_callback_kb1btn1(callback_query: types.CallbackQuery):
+    # await bot.answer_callback_query(callback_query.id, text=callback_query.message.text + ' ' + callback_query.data, show_alert=True)
+    await bot.edit_message_text(message_id=callback_query.message.message_id, chat_id=callback_query.from_user.id, text=callback_query.message.text + ' ' +callback_query.data)
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

@@ -12,8 +12,16 @@ cursor = conn.cursor()
 # sql2 = "drop table `subscription`"
 # cursor.execute(sql2)
 
+# Создание таблицы
+cursor.execute("""CREATE TABLE categories
+                  (category_name varchar(255), user_id varchar(255) NOT NULL, add_date date)
+               """)
+conn.commit()
 
-sql = "select * from subscription"
+# sql2 = "drop table `categories`"
+# cursor.execute(sql2)
+
+sql = "select * from transa"
 cursor.execute(sql)
 print(cursor.fetchall())
 #
