@@ -67,7 +67,12 @@ async def add_trans(message: types.Message):
 @dp.callback_query_handler()
 async def process_callback_kb1btn1(callback_query: types.CallbackQuery):
     # await bot.answer_callback_query(callback_query.id, text=callback_query.message.text + ' ' + callback_query.data, show_alert=True)
-    await bot.edit_message_text(message_id=callback_query.message.message_id, chat_id=callback_query.from_user.id, text=callback_query.message.text + ' ' +callback_query.data)
+    if callback_query.data != 'category_change':
+        await bot.edit_message_text(message_id=callback_query.message.message_id, chat_id=callback_query.from_user.id,
+                                text=callback_query.message.text + ' ' +callback_query.data,
+                                reply_markup=keyboard.retry)
+    else:
+        await bot.answer_callback_query(callback_query.id, show_alert=True, text='пока нечего')
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
